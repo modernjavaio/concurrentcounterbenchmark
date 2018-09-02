@@ -12,24 +12,24 @@ import java.util.stream.IntStream;
 
 public class Test {
     private static final Logger logger = LoggerFactory.getLogger(Test.class);
-    public static final int COUNT = 1000000;
+    private static final int ITERATIONS = 1_000_000;
+    private static final int THREAD_COUNT = 8;
 
     public static void main(String... argv) throws Exception {
-        int threadCount = 2;
-        testCounter(threadCount,  new OriginalCounter<>());
-        testCounter(threadCount,  new InheritanceAtomicIntegerCounter<>());
-        testCounter(threadCount,  new SynchronizedHashMapCounter<>());
-        testCounter(threadCount,  new AtomicIntegerCounter<>());
-        testCounter(threadCount,  new MapComputeCounter<>());
-        testCounter(threadCount,  new LongAdderCounter<>());
+        testCounter(new OriginalCounter<>());
+        testCounter(new InheritanceAtomicIntegerCounter<>());
+        testCounter(new SynchronizedHashMapCounter<>());
+        testCounter(new AtomicIntegerCounter<>());
+        testCounter(new MapComputeCounter<>());
+        testCounter(new LongAdderCounter<>());
     }
 
-    private static void testCounter(int threadCount, Counter<String> map) throws InterruptedException, java.util.concurrent.ExecutionException {
-        ExecutorService pool = Executors.newFixedThreadPool(threadCount);
+    private static void testCounter(Counter<String> map) throws InterruptedException, java.util.concurrent.ExecutionException {
+        ExecutorService pool = Executors.newFixedThreadPool(THREAD_COUNT);
 
 
-        List<Future> futures = IntStream.range(0, threadCount).mapToObj(i -> pool.submit(() -> {
-            for(int j = 0; j < COUNT; j++) {
+        List<Future> futures = IntStream.range(0, THREAD_COUNT).mapToObj(i -> pool.submit(() -> {
+            for(int j = 0; j < ITERATIONS; j++) {
                 map.up("key");
             }
         })).collect(Collectors.toList());
@@ -40,10 +40,12 @@ public class Test {
 
         int result = map.getCount("key");
 
-        if (result != threadCount * COUNT) {
+        if (result != THREAD_COUNT * ITERATIONS) {
             logger.error("Incorrect count from {}", map.getClass().getCanonicalName());
         }
 
         logger.info("result: {}", result);
+
+        pool.shutdown();
     }
 }
