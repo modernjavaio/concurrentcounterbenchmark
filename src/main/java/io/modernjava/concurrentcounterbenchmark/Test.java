@@ -20,6 +20,7 @@ public class Test {
         testCounter(new InheritanceAtomicIntegerCounter<>());
         testCounter(new SynchronizedHashMapCounter<>());
         testCounter(new AtomicIntegerCounter<>());
+        testCounter(new MapAtomicIntegerCounter<>());
         testCounter(new MapComputeCounter<>());
         testCounter(new LongAdderCounter<>());
     }

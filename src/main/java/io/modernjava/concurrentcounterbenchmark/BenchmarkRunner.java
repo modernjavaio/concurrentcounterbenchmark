@@ -10,6 +10,7 @@ public class BenchmarkRunner {
     private static Counter<String> composition = new InheritanceAtomicIntegerCounter<>();
     private static Counter<String> synchronizedCounter = new SynchronizedHashMapCounter<>();
     private static Counter<String> atomicInteger = new AtomicIntegerCounter<>();
+    private static Counter<String> mapAtomicInteger = new MapAtomicIntegerCounter<>();
     private static Counter<String> mapCompute = new MapComputeCounter<>();
     private static Counter<String> longAdder = new LongAdderCounter<>();
 
@@ -25,13 +26,17 @@ public class BenchmarkRunner {
     public static int testInheritance() {
         return composition.up("key");
     }
-      @Benchmark
+    @Benchmark
     public static int testSynchonized() {
         return synchronizedCounter.up("key");
     }
     @Benchmark
-      public static int testAtomicInteger() {
+    public static int testAtomicInteger() {
         return atomicInteger.up("key");
+    }
+    @Benchmark
+    public static int testMapAtomicInteger() {
+        return mapAtomicInteger.up("key");
     }
     @Benchmark
     public static int testMapCompute() {

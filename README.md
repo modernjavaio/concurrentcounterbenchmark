@@ -23,6 +23,8 @@ The implementations are:
 * `SynchronizedHashMapCounter`: Modified `AtomicIntegerCounter` to use 
         `Collections.synchronizedMap()` wrapping a `HashMap` to see the differences
         in performance with a ConcurrentHashMap.
+* `MapAtomicIntegerCounter`: This version of `AtomicIntegerCounter` uses a normal `HashMap` to see
+        what overhead the `ConcurrentHashMap` has. This version is not thread-safe.
     
 ## Running tests    
 The simplest way to run the tests is to run
